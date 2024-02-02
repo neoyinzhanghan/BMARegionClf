@@ -19,7 +19,7 @@ bma_files = [file for file in os.listdir(bma_dir) if file.endswith(".ndpi")]
 for file in tqdm(bma_files, desc="Finding max levels", total=len(bma_files)):
     filename = os.path.join(bma_dir, file)
     bma = pyvips.Image.new_from_file(filename, level=0)
-    levels = bma.get("openslide.level-count")
+    levels = int(bma.get("openslide.level-count"))
     if levels > max_levels:
         max_levels = levels
 
