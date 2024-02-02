@@ -92,9 +92,10 @@ class ResNetModel(pl.LightningModule):
         self.log('val_acc_epoch', self.val_accuracy.compute())
         self.log('val_auroc_epoch', self.val_auroc.compute())
         # Handle or reset saved outputs as needed
+
 # Main training loop
 def train_model(downsample_factor):
-    data_module = ImageDataModule(data_dir='path/to/your/data', batch_size=64, downsample_factor=downsample_factor)
+    data_module = ImageDataModule(data_dir='/media/hdd2/neo/bma_region_clf_data_cropped_split', batch_size=64, downsample_factor=downsample_factor)
     model = ResNetModel(num_classes=3)
     
     # Logger
