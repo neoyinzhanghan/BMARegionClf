@@ -27,7 +27,7 @@ for file in tqdm(bma_files, desc="Finding max levels", total=len(bma_files)):
 # create the columns for the dataframe
 columns = ["filename"]
 for i in range(max_levels):
-    columns.append(f"level_{i}_magnification")
+    columns.append(f"level_{i}_downsampling_factor")
 
 # create the dataframe
 df = pd.DataFrame(columns=columns)
@@ -39,7 +39,7 @@ for file in tqdm(bma_files, desc="Filling dataframe", total=len(bma_files)):
     bma = openslide.OpenSlide(filename)
     levels = bma.level_count
     magnifications = [bma.properties[f"openslide.level[{i}].downsample"] for i in range(levels)]
-    df = df.append({"filename": file, **{f"level_{i}_magnification": magnifications[i] for i in range(levels)}}, ignore_index=True)
+    df = df.append({"filename": file, **{f"level_{i}_downsampling_factor": magnifications[i] for i in range(levels)}}, ignore_index=True)
 
 # save the dataframe as a csv file
-df.to_csv(os.path.join(save_dir, "magnification.csv"), index=False)
+df.to_csv(os.path.join(save_dir, "downsampling_factor.csv"), index=False)
