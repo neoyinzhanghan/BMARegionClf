@@ -35,7 +35,7 @@ df = pd.DataFrame(columns=columns)
 for file in tqdm(bma_files, desc="Filling dataframe", total=len(bma_files)):
     filename = os.path.join(bma_dir, file)
     bma = pyvips.Image.new_from_file(filename, level=0)
-    levels = bma.get("openslide.level-count")
+    levels = int(bma.get("openslide.level-count"))
     magnifications = [bma.get("openslide.level-mag", i) for i in range(levels)]
     row = [filename] + magnifications
     df = df.append(pd.Series(row, index=df.columns), ignore_index=True)
