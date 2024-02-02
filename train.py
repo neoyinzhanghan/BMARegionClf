@@ -106,7 +106,7 @@ def train_model(downsample_factor):
         max_epochs=10, 
         logger=logger, 
         devices=3, 
-        num_processes=20, 
+        num_workers=20, 
         accelerator='ddp'  # 'ddp' for DistributedDataParallel
     )
     trainer.fit(model, data_module)
