@@ -22,7 +22,7 @@ class DownsampledDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         image, label = self.dataset[idx]
         if self.downsample_factor > 1:
-            size = (image.size()[1] // self.downsample_factor, image.size()[0] // self.downsample_factor)
+            size = (512 // self.downsample_factor, 512 // self.downsample_factor)
             image = transforms.functional.resize(image, size)
         return image, label
 
