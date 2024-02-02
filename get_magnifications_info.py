@@ -18,9 +18,10 @@ for root, dirs, files in os.walk(bma_dir):
         if file.endswith(".ndpi"):
             filename = os.path.join(root, file)
             bma = pyvips.Image.new_from_file(filename, level=0)
-            levels = bma.get("openslide.level-count")
+            levels = int(bma.get("openslide.level-count"))  # Convert to integer
             if levels > max_levels:
                 max_levels = levels
+
 
 # create the columns for the dataframe
 columns = ["filename"]
