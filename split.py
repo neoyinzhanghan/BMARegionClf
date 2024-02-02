@@ -39,7 +39,7 @@
 #       - 0_BL.png ...
 
 import os
-import numpy as np
+import random
 from PIL import Image
 from tqdm import tqdm
 
@@ -62,33 +62,32 @@ if not os.path.exists(save_dir):
     os.makedirs(os.path.join(save_dir, "test", "blood"))
     os.makedirs(os.path.join(save_dir, "test", "clot"))
 
-# split the data
-dirs = os.listdir(input_dir)
-all_subdirs = [subdir for subdir in dirs if os.path.isdir(os.path.join(input_dir, subdir))]
-all_adequate_files = []
-all_blood_files = []
-all_clot_files = []
-
-for subdir in tqdm(all_subdirs, desc="Processing subdirs"):
-    print(f"Processing {subdir}...")
-    subdir_path = os.path.join(input_dir, subdir)
-    subdirs = [os.path.join(subdir_path, file) for file in os.listdir(subdir_path) if os.path.isdir(os.path.join(subdir_path, file))]
-
-    for subsubdir in subdirs:
-        adequate_dirs = [os.path.join(subsubdir, file) for file in os.listdir(subsubdir) if file.startswith("adequate")]
-        blood_dirs = [os.path.join(subsubdir, file) for file in os.listdir(subsubdir) if file.startswith("blood")]
-        clot_dirs = [os.path.join(subsubdir, file) for file in os.listdir(subsubdir) if file.startswith("clot")]
-
-        all_adequate_files.extend([os.path.join(adequate_dir, file) for adequate_dir in adequate_dirs for file in os.listdir(adequate_dir)])
-        all_blood_files.extend([os.path.join(blood_dir, file) for blood_dir in blood_dirs for file in os.listdir(blood_dir)])
-        all_clot_files.extend([os.path.join(clot_dir, file) for clot_dir in clot_dirs for file in os.listdir(clot_dir)])
+all_adequate_files = [os.path.join(input_dir, "adequate", file) for file in os.listdir(os.path.join(input_dir, "adequate"))]
+all_blood_files = [os.path.join(input_dir, "blood", file) for file in os.listdir(os.path.join(input_dir, "blood"))]
+all_clot_files = [os.path.join(input_dir, "clot", file) for file in os.listdir(os.path.join(input_dir, "clot"))]
 
 # split the data
-train_adequate, val_adequate, test_adequate = np.split(all_adequate_files, [int(.8*len(all_adequate_files)), int(.9*len(all_adequate_files))])
-train_blood, val_blood, test_blood = np.split(all_blood_files, [int(.8*len(all_blood_files)), int(.9*len(all_blood_files))])
-train_clot, val_clot, test_clot = np.split(all_clot_files, [int(.8*len(all_clot_files)), int(.9*len(all_clot_files))])
+random.shuffle(all_adequate_files)
+random.shuffle(all_blood_files)
+random.shuffle(all_clot_files)
+
+print(len(all_adequate_files), len(all_blood_files), len(all_clot_files))
+
+train_adequate = all_adequate_files[:int(0.8 * len(all_adequate_files))]
+val_adequate = all_adequate_files[int(0.8 * len(all_adequate_files)):int(0.9 * len(all_adequate_files))]
+test_adequate = all_adequate_files[int(0.9 * len(all_adequate_files)):]
+
+train_blood = all_blood_files[:int(0.8 * len(all_blood_files))]
+val_blood = all_blood_files[int(0.8 * len(all_blood_files)):int(0.9 * len(all_blood_files))]
+test_blood = all_blood_files[int(0.9 * len(all_blood_files)):]
+
+train_clot = all_clot_files[:int(0.8 * len(all_clot_files))]
+val_clot = all_clot_files[int(0.8 * len(all_clot_files)):int(0.9 * len(all_clot_files))]
+test_clot = all_clot_files[int(0.9 * len(all_clot_files)):]
 
 # save the data
+print("Saving data...")
+print(len(train_adequate), len(val_adequate), len(test_adequate))
 for img_path in tqdm(train_adequate, desc="Saving train adequate"):
     img = Image.open(img_path)
     img.save(os.path.join(save_dir, "train", "adequate", os.path.basename(img_path)))
