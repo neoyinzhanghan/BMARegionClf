@@ -22,7 +22,7 @@ class DownsampledDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         image, label = self.dataset[idx]
         if self.downsample_factor > 1:
-            size = (image.size[1] // self.downsample_factor, image.size[0] // self.downsample_factor)
+            size = (image.size()[1] // self.downsample_factor, image.size()[0] // self.downsample_factor)
             image = transforms.functional.resize(image, size)
         return image, label
 
@@ -34,7 +34,6 @@ class ImageDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.downsample_factor = downsample_factor
         self.transform = transforms.Compose([
-            transforms.Resize(512//downsample_factor),
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
@@ -103,7 +102,7 @@ def train_model(downsample_factor):
 
     # Trainer configuration for distributed training
     trainer = pl.Trainer(
-        max_epochs=10, 
+        max_epochs=2, 
         logger=logger, 
         devices=3, 
         accelerator='gpu'  # 'ddp' for DistributedDataParallel
