@@ -22,7 +22,7 @@ class DownsampledDataset(torch.utils.data.Dataset):
     def __getitem__(self, idx):
         image, label = self.dataset[idx]
         if self.downsample_factor > 1:
-            size = (512 // self.downsample_factor, 512 // self.downsample_factor)
+            size = (image.size()[1] // self.downsample_factor, image.size()[0] // self.downsample_factor)
             image = transforms.functional.resize(image, size)
         return image, label
 
@@ -39,12 +39,23 @@ class ImageDataModule(pl.LightningDataModule):
         ])
 
     def setup(self, stage=None):
-        # Modify to point to your dataset
-        full_dataset = datasets.ImageFolder(root=self.data_dir, transform=self.transform)
-        self.dataset = DownsampledDataset(full_dataset, self.downsample_factor)
+        # Load train, validation and test datasets
+        train_dataset = datasets.ImageFolder(root=os.path.join(self.data_dir, 'train'), transform=self.transform)
+        val_dataset = datasets.ImageFolder(root=os.path.join(self.data_dir, 'val'), transform=self.transform)
+        test_dataset = datasets.ImageFolder(root=os.path.join(self.data_dir, 'test'), transform=self.transform)
+
+        self.train_dataset = DownsampledDataset(train_dataset, self.downsample_factor)
+        self.val_dataset = DownsampledDataset(val_dataset, self.downsample_factor)
+        self.test_dataset = DownsampledDataset(test_dataset, self.downsample_factor)
 
     def train_dataloader(self):
-        return DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=20)
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=20)
+
+    def val_dataloader(self):
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=20)
+
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=20)
 
 
 # Model Module
@@ -81,10 +92,9 @@ class ResNetModel(pl.LightningModule):
         x, y = batch
         y_hat = self.forward(x)
         loss = F.cross_entropy(y_hat, y)
+        self.log('val_loss', loss, on_step=False, on_epoch=True)
         self.val_accuracy(y_hat, y)
         self.val_auroc(y_hat, y)
-        # Save outputs as instance attributes or in some other structure
-        # For example: self.current_val_outputs.append(output)
         return loss
 
     def on_validation_epoch_end(self):
