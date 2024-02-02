@@ -2,6 +2,7 @@ import os
 import pyvips
 import pandas as pd
 from tqdm import tqdm
+import openslide
 
 # traverse through all the ndpi files in the BMA directory
 # save the magnification of every single levels of each BMA file in a pandas dataframe and save it as a csv file named magnification.csv
@@ -33,12 +34,12 @@ df = pd.DataFrame(columns=columns)
 
 
 for file in tqdm(bma_files, desc="Filling dataframe", total=len(bma_files)):
+    # USE openslide instead
     filename = os.path.join(bma_dir, file)
-    bma = pyvips.Image.new_from_file(filename, level=0)
-    levels = int(bma.get("openslide.level-count"))
-    magnifications = [bma.get(f"openslide.level[{i}].mag") for i in range(levels)]
-    row = [filename] + magnifications
-    df = df.append(pd.Series(row, index=df.columns), ignore_index=True)
+    bma = openslide.OpenSlide(filename)
+    levels = bma.level_count
+    magnifications = [bma.properties[f"openslide.level[{i}].downsample"] for i in range(levels)]
+    df = df.append({"filename": file, **{f"level_{i}_magnification": magnifications[i] for i in range(levels)}}, ignore_index=True)
 
 # save the dataframe as a csv file
 df.to_csv(os.path.join(save_dir, "magnification.csv"), index=False)
