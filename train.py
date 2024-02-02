@@ -74,25 +74,24 @@ class ResNetModel(pl.LightningModule):
         self.log('train_auroc', self.train_auroc, on_step=True, on_epoch=True)
         return loss
 
+    def configure_optimizers(self):
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
+        return optimizer
+    
     def validation_step(self, batch, batch_idx):
         x, y = batch
         y_hat = self.forward(x)
         loss = F.cross_entropy(y_hat, y)
         self.val_accuracy(y_hat, y)
         self.val_auroc(y_hat, y)
-        self.log('val_loss', loss, on_step=True, on_epoch=True)
-        self.log('val_acc', self.val_accuracy, on_step=True, on_epoch=True)
-        self.log('val_auroc', self.val_auroc, on_step=True, on_epoch=True)
+        # Save outputs as instance attributes or in some other structure
+        # For example: self.current_val_outputs.append(output)
         return loss
 
-    def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=0.001)
-        return optimizer
-
-    def validation_epoch_end(self, outputs):
+    def on_validation_epoch_end(self):
         self.log('val_acc_epoch', self.val_accuracy.compute())
         self.log('val_auroc_epoch', self.val_auroc.compute())
-
+        # Handle or reset saved outputs as needed
 # Main training loop
 def train_model(downsample_factor):
     data_module = ImageDataModule(data_dir='path/to/your/data', batch_size=64, downsample_factor=downsample_factor)
