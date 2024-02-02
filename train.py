@@ -92,7 +92,7 @@ class ResNetModel(pl.LightningModule):
     def validation_epoch_end(self, outputs):
         self.log('val_acc_epoch', self.val_accuracy.compute())
         self.log('val_auroc_epoch', self.val_auroc.compute())
-        
+
 # Main training loop
 def train_model(downsample_factor):
     data_module = ImageDataModule(data_dir='path/to/your/data', batch_size=32, downsample_factor=downsample_factor)
@@ -105,7 +105,7 @@ def train_model(downsample_factor):
     trainer = pl.Trainer(
         max_epochs=10, 
         logger=logger, 
-        gpus=3, 
+        devices=3, 
         num_processes=20, 
         accelerator='ddp'  # 'ddp' for DistributedDataParallel
     )
