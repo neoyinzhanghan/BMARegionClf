@@ -45,7 +45,7 @@ class ImageDataModule(pl.LightningDataModule):
         self.dataset = DownsampledDataset(full_dataset, self.downsample_factor)
 
     def train_dataloader(self):
-        return DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True)
+        return DataLoader(self.dataset, batch_size=self.batch_size, shuffle=True, num_workers=20)
 
 
 # Model Module
@@ -95,7 +95,7 @@ class ResNetModel(pl.LightningModule):
 
 # Main training loop
 def train_model(downsample_factor):
-    data_module = ImageDataModule(data_dir='path/to/your/data', batch_size=32, downsample_factor=downsample_factor)
+    data_module = ImageDataModule(data_dir='path/to/your/data', batch_size=64, downsample_factor=downsample_factor)
     model = ResNetModel(num_classes=3)
     
     # Logger
@@ -103,11 +103,10 @@ def train_model(downsample_factor):
 
     # Trainer configuration for distributed training
     trainer = pl.Trainer(
-        max_epochs=10, 
+        max_epochs=100, 
         logger=logger, 
         devices=3, 
-        num_workers=20, 
-        accelerator='ddp'  # 'ddp' for DistributedDataParallel
+        accelerator='gpu'  # 'ddp' for DistributedDataParallel
     )
     trainer.fit(model, data_module)
 
