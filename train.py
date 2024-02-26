@@ -65,10 +65,10 @@ class ResNetModel(pl.LightningModule):
         self.model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
 
-        self.train_accuracy = Accuracy()
-        self.val_accuracy = Accuracy()
-        self.train_auroc = AUROC(num_classes=num_classes)
-        self.val_auroc = AUROC(num_classes=num_classes)
+        self.train_accuracy = Accuracy(task='multiclass')
+        self.val_accuracy = Accuracy(task='multiclass')
+        self.train_auroc = AUROC(num_classes=num_classes, task='multiclass')
+        self.val_auroc = AUROC(num_classes=num_classes, task='multiclass')
 
     def forward(self, x):
         return self.model(x)
