@@ -60,7 +60,7 @@ class ImageDataModule(pl.LightningDataModule):
 
 # Model Module
 class ResNetModel(pl.LightningModule):
-    def __init__(self, num_classes=3):
+    def __init__(self, num_classes=2):
         super().__init__()
         self.model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
@@ -104,8 +104,8 @@ class ResNetModel(pl.LightningModule):
 
 # Main training loop
 def train_model(downsample_factor):
-    data_module = ImageDataModule(data_dir='/media/hdd2/neo/bma_region_clf_data_cropped_split', batch_size=8, downsample_factor=downsample_factor)
-    model = ResNetModel(num_classes=3)
+    data_module = ImageDataModule(data_dir='bma_region_clf_data_full_v2', batch_size=32, downsample_factor=downsample_factor)
+    model = ResNetModel(num_classes=2)
     
     # Logger
     logger = TensorBoardLogger('lightning_logs', name=str(downsample_factor))
@@ -120,5 +120,5 @@ def train_model(downsample_factor):
     trainer.fit(model, data_module)
 
 # Run training for each downsampling factor
-for factor in [1, 2, 4, 8, 16]:
+for factor in [8]:
     train_model(factor)
