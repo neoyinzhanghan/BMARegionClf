@@ -104,7 +104,7 @@ class ResNetModel(pl.LightningModule):
 
 # Main training loop
 def train_model(downsample_factor):
-    data_module = ImageDataModule(data_dir='bma_region_clf_data_full_v2', batch_size=32, downsample_factor=downsample_factor)
+    data_module = ImageDataModule(data_dir='/media/hdd1/neo/bma_region_clf_data_full_v2', batch_size=32, downsample_factor=downsample_factor)
     model = ResNetModel(num_classes=2)
     
     # Logger
