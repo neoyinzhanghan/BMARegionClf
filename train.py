@@ -114,7 +114,7 @@ def train_model(downsample_factor):
     trainer = pl.Trainer(
         max_epochs=100, 
         logger=logger, 
-        devices=3, 
+        devices=2, 
         accelerator='gpu'  # 'ddp' for DistributedDataParallel
     )
     trainer.fit(model, data_module)
