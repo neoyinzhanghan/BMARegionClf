@@ -112,7 +112,7 @@ def train_model(downsample_factor):
 
     # Trainer configuration for distributed training
     trainer = pl.Trainer(
-        max_epochs=100, 
+        max_epochs=200, 
         logger=logger, 
         devices=2, 
         accelerator='gpu'  # 'ddp' for DistributedDataParallel
