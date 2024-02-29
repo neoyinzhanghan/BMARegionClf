@@ -35,7 +35,7 @@ class ImageDataModule(pl.LightningDataModule):
         self.downsample_factor = downsample_factor
         self.transform = transforms.Compose([
             transforms.ToTensor(),
-            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+            transforms.Normalize(mean=(0.61070228, 0.54225375, 0.65411311), std=(0.1485182, 0.1786308, 0.12817113))
         ])
 
     def setup(self, stage=None):
