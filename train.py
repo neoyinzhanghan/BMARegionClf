@@ -120,5 +120,5 @@ def train_model(downsample_factor):
     trainer.fit(model, data_module)
 
 # Run training for each downsampling factor
-for factor in [8]:
+for factor in [1,2,4,8,16]:
     train_model(factor)
