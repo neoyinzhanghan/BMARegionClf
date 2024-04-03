@@ -236,7 +236,7 @@ def train_func(config):
     trainer = pl.Trainer(
         devices="auto",
         accelerator="auto",
-        strategy=RayDDPStrategy(),
+        strategy='ddp',  # 'ddp' for DistributedDataParallel
         callbacks=[RayTrainReportCallback()],
         plugins=[RayLightningEnvironment()],
         enable_progress_bar=False,
