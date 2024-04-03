@@ -200,7 +200,7 @@ scheduler = ASHAScheduler(
     reduction_factor=2,
 )
 
-fixed_config = {"downsample_factor": 1, "num_classes": 2}
+fixed_config = {"downsample_factor": 1, "num_classes": 2, "batch_size": 32}
 search_space = {
     "lr": tune.sample_from(lambda spec: 10 ** (-10 * np.random.rand())),
 }
@@ -221,7 +221,7 @@ run_config = RunConfig(
 def train_func(config):
     dm = ImageDataModule(
         data_dir="/media/hdd2/neo/bma_region_clf_data_full_v2_split",
-        batch_size=config["batch_size"],
+        batch_size=fixed_config["batch_size"],
         downsample_factor=fixed_config,
     )
     model = ResNetModel(num_classes=fixed_config["num_classes"])
