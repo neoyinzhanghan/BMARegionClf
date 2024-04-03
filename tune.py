@@ -21,7 +21,7 @@ from torchmetrics import Accuracy, AUROC
 ####################################################################################################
 from ray.train.lightning import (
     RayDDPStrategy,
-    RayLightningEnvionment,
+    RayLightningEnvironment,
     RayTrainReportCallback,
     prepare_trainer,
 )
@@ -231,7 +231,7 @@ def train_func(config):
         accelerator="auto",
         strategy=RayDDPStrategy(),
         callbacks=[RayTrainReportCallback()],
-        plugins=[RayLightningEnvionment()],
+        plugins=[RayLightningEnvironment()],
         enable_progress_bar=False,
     )
 
