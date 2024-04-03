@@ -148,10 +148,17 @@ class ResNetModel(pl.LightningModule):
         self.model = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
 
-        self.train_accuracy = Accuracy(task="multiclass", num_classes=num_classes)
-        self.val_accuracy = Accuracy(task="multiclass", num_classes=num_classes)
-        self.train_auroc = AUROC(num_classes=num_classes, task="multiclass")
-        self.val_auroc = AUROC(num_classes=num_classes, task="multiclass")
+        assert num_classes >= 2
+
+        if num_classes == 2:
+            task = "binary"
+        elif num_classes > 2:
+            task = "multiclass"
+
+        self.train_accuracy = Accuracy(task=task, num_classes=num_classes)
+        self.val_accuracy = Accuracy(task=task, num_classes=num_classes)
+        self.train_auroc = AUROC(num_classes=num_classes, task=task)
+        self.val_auroc = AUROC(num_classes=num_classes, task=task)
 
         self.config = config
 
