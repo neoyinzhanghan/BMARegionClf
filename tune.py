@@ -257,7 +257,7 @@ def tune_clf_asha(num_samples=10):
         ray_trainer,
         param_space={"train_loop_config": search_space},
         tune_config=tune.TuneConfig(
-            metric="plt/val_accuracy",
+            metric="val_acc_epoch",
             mode="max",
             num_samples=num_samples,
             scheduler=scheduler,
@@ -268,4 +268,4 @@ def tune_clf_asha(num_samples=10):
 
 results = tune_clf_asha(num_samples=num_samples)
 
-results.get_best_result(metric="plt/val_accuracy", mode="max")
+results.get_best_result(metric="val_acc_epoch", mode="max")
