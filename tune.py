@@ -207,7 +207,7 @@ search_space = {
 scaling_config = ScalingConfig(
     num_workers=1,
     use_gpu=True,
-    resources_per_worker={"cpu": 1, "gpu": 1},
+    resources_per_worker={"CPU": 1, "GPU": 1},
 )
 run_config = RunConfig(
     checkpoint_config=CheckpointConfig(
