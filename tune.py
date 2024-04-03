@@ -257,7 +257,7 @@ def tune_clf_asha(num_samples=10):
         ray_trainer,
         param_space={"train_loop_config": search_space},
         tune_config=tune.TuneConfig(
-            metrics="plt/val_accuracy",
+            metric="plt/val_accuracy",
             mode="max",
             num_samples=num_samples,
             scheduler=scheduler,
