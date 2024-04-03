@@ -205,9 +205,9 @@ search_space = {
     "lr": tune.sample_from(lambda spec: 10 ** (-10 * np.random.rand())),
 }
 scaling_config = ScalingConfig(
-    num_workers=3,
+    num_workers=1,
     use_gpu=True,
-    resources_per_worker={"cpu": 5, "gpu": 1},
+    resources_per_worker={"cpu": 18, "gpu": 3},
 )
 run_config = RunConfig(
     checkpoint_config=CheckpointConfig(
