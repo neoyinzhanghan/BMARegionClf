@@ -275,6 +275,11 @@ def tune_clf_asha(num_samples=10):
     return tuner.fit()
 
 
-results = tune_clf_asha(num_samples=num_samples)
+if __name__ == "__main__":
 
-results.get_best_result(metric="val_acc_epoch", mode="max")
+    # just train the model
+    train_func(fixed_config)
+
+    # results = tune_clf_asha(num_samples=num_samples)
+
+    # results.get_best_result(metric="val_acc_epoch", mode="max")
