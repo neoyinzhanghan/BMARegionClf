@@ -236,8 +236,8 @@ def train_func(config):
     model = ResNetModel(num_classes=fixed_config["num_classes"])
 
     trainer = pl.Trainer(
-        devices='auto',
-        accelerator='auto',
+        devices="auto",
+        accelerator="auto",
         strategy=RayDDPStrategy(),
         callbacks=[RayTrainReportCallback()],
         plugins=[RayLightningEnvironment()],
@@ -277,9 +277,6 @@ def tune_clf_asha(num_samples=10):
 
 if __name__ == "__main__":
 
-    # just train the model
-    train_func(fixed_config)
+    results = tune_clf_asha(num_samples=num_samples)
 
-    # results = tune_clf_asha(num_samples=num_samples)
-
-    # results.get_best_result(metric="val_acc_epoch", mode="max")
+    results.get_best_result(metric="val_acc_epoch", mode="max")
