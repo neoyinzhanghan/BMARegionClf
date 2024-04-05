@@ -221,7 +221,7 @@ scaling_config = ScalingConfig(
 run_config = RunConfig(
     checkpoint_config=CheckpointConfig(
         num_to_keep=2,
-        checkpoint_score_attribute="ptl/val_accuarcy",
+        checkpoint_score_attribute="val_acc_epoch",
         checkpoint_score_order="max",
     )
 )
