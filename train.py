@@ -92,22 +92,19 @@ class ImageDataModule(pl.LightningDataModule):
         train_dataset = datasets.ImageFolder(
             root=os.path.join(self.data_dir, "train"),
             transform=self.transform,
-            apply_augmentation=True,
         )
         val_dataset = datasets.ImageFolder(
             root=os.path.join(self.data_dir, "val"),
             transform=self.transform,
-            apply_augmentation=False,
         )
         test_dataset = datasets.ImageFolder(
             root=os.path.join(self.data_dir, "test"),
             transform=self.transform,
-            apply_augmentation=False,
         )
 
-        self.train_dataset = DownsampledDataset(train_dataset, self.downsample_factor)
-        self.val_dataset = DownsampledDataset(val_dataset, self.downsample_factor)
-        self.test_dataset = DownsampledDataset(test_dataset, self.downsample_factor)
+        self.train_dataset = DownsampledDataset(train_dataset, self.downsample_factor, apply_augmentation=True)
+        self.val_dataset = DownsampledDataset(val_dataset, self.downsample_factor, apply_augmentation=False)
+        self.test_dataset = DownsampledDataset(test_dataset, self.downsample_factor, apply_augmentation=False)
 
     def train_dataloader(self):
         return DataLoader(
