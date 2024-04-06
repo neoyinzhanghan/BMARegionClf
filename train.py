@@ -50,9 +50,10 @@ def get_feat_extract_augmentation_pipeline(image_size):
 
 # Define a custom dataset that applies downsampling
 class DownsampledDataset(torch.utils.data.Dataset):
-    def __init__(self, dataset, downsample_factor):
+    def __init__(self, dataset, downsample_factor, apply_augmentation=True):
         self.dataset = dataset
         self.downsample_factor = downsample_factor
+        self.apply_augmentation = apply_augmentation
 
     def __len__(self):
         return len(self.dataset)
@@ -63,10 +64,11 @@ class DownsampledDataset(torch.utils.data.Dataset):
             size = (512 // self.downsample_factor, 512 // self.downsample_factor)
             image = transforms.functional.resize(image, size)
 
-            # Apply augmentation
-            image = get_feat_extract_augmentation_pipeline(
-                image_size=512 // self.downsample_factor
-            )(image=np.array(image))["image"]
+            if self.apply_augmentation:
+                # Apply augmentation
+                image = get_feat_extract_augmentation_pipeline(
+                    image_size=512 // self.downsample_factor
+                )(image=np.array(image))["image"]
 
         return image, label
 
@@ -88,13 +90,19 @@ class ImageDataModule(pl.LightningDataModule):
     def setup(self, stage=None):
         # Load train, validation and test datasets
         train_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "train"), transform=self.transform
+            root=os.path.join(self.data_dir, "train"),
+            transform=self.transform,
+            apply_augmentation=True,
         )
         val_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "val"), transform=self.transform
+            root=os.path.join(self.data_dir, "val"),
+            transform=self.transform,
+            apply_augmentation=False,
         )
         test_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "test"), transform=self.transform
+            root=os.path.join(self.data_dir, "test"),
+            transform=self.transform,
+            apply_augmentation=False,
         )
 
         self.train_dataset = DownsampledDataset(train_dataset, self.downsample_factor)
