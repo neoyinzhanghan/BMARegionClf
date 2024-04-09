@@ -1,16 +1,20 @@
 import os
-import pytorch_lightning as pl
-from pytorch_lightning.loggers import TensorBoardLogger
-from torchvision import transforms, datasets, models
 import torch
-from torch.utils.data import DataLoader
-from torch import nn
+import pytorch_lightning as pl
+import torch.optim.lr_scheduler as lr_scheduler
 import torch.nn.functional as F
-from torchmetrics import Accuracy, AUROC
 import albumentations as A
 import numpy as np
+from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.utils.data import DataLoader
+from torch import nn
+from pytorch_lightning.loggers import TensorBoardLogger
+from torchvision import transforms, datasets, models
+from torchmetrics import Accuracy, AUROC
 
-default_config = {"lr": 3.56e-08}
+
+default_config = {"lr": 3.56e-06} # 3.56e-07
+num_epochs = 100
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
@@ -102,9 +106,15 @@ class ImageDataModule(pl.LightningDataModule):
             transform=self.transform,
         )
 
-        self.train_dataset = DownsampledDataset(train_dataset, self.downsample_factor, apply_augmentation=True)
-        self.val_dataset = DownsampledDataset(val_dataset, self.downsample_factor, apply_augmentation=False)
-        self.test_dataset = DownsampledDataset(test_dataset, self.downsample_factor, apply_augmentation=False)
+        self.train_dataset = DownsampledDataset(
+            train_dataset, self.downsample_factor, apply_augmentation=True
+        )
+        self.val_dataset = DownsampledDataset(
+            val_dataset, self.downsample_factor, apply_augmentation=False
+        )
+        self.test_dataset = DownsampledDataset(
+            test_dataset, self.downsample_factor, apply_augmentation=False
+        )
 
     def train_dataloader(self):
         return DataLoader(
@@ -161,7 +171,12 @@ class ResNetModel(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config["lr"])
-        return optimizer
+
+        # T_max is the number of steps until the first restart (here, set to total training epochs).
+        # eta_min is the minimum learning rate. Adjust these parameters as needed.
+        scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0)
+
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -192,7 +207,7 @@ def train_model(downsample_factor):
 
     # Trainer configuration for distributed training
     trainer = pl.Trainer(
-        max_epochs=1000,
+        max_epochs=num_epochs,
         logger=logger,
         devices=3,
         accelerator="gpu",  # 'ddp' for DistributedDataParallel

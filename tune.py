@@ -14,6 +14,7 @@ from torchvision import transforms, datasets, models
 from torch.utils.data import DataLoader
 from torch import nn
 from torchmetrics import Accuracy, AUROC
+from torch.optim.lr_scheduler import CosineAnnealingLR
 
 
 ####################################################################################################
@@ -180,7 +181,12 @@ class ResNetModel(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.config["lr"])
-        return optimizer
+
+        # T_max is the number of steps until the first restart (here, set to total training epochs).
+        # eta_min is the minimum learning rate. Adjust these parameters as needed.
+        scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=0)
+
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
@@ -231,7 +237,7 @@ def train_func(config):
     dm = ImageDataModule(
         data_dir="/media/hdd2/neo/bma_region_clf_data_full_v2_split",
         batch_size=fixed_config["batch_size"],
-        downsample_factor=fixed_config['downsample_factor'],
+        downsample_factor=fixed_config["downsample_factor"],
     )
     model = ResNetModel(num_classes=fixed_config["num_classes"])
 
