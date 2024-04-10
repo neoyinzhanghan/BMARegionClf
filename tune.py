@@ -245,8 +245,8 @@ def train_func(config):
     model = ResNetModel(num_classes=fixed_config["num_classes"])
 
     trainer = pl.Trainer(
-        devices="auto",
-        accelerator="auto",
+        devices=3,
+        accelerator="gpu",
         strategy=RayDDPStrategy(),
         callbacks=[RayTrainReportCallback()],
         plugins=[RayLightningEnvironment()],
