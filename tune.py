@@ -210,7 +210,7 @@ class ResNetModel(pl.LightningModule):
 # RAY Tune
 ####################################################################################################
 
-num_epochs = 5
+num_epochs = 15
 num_samples = 10
 scheduler = ASHAScheduler(
     max_t=num_epochs,
