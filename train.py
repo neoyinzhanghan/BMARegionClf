@@ -13,7 +13,7 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 3.56e-06} # 3.56e-07
+default_config = {"lr": 3.56e-06}  # 3.56e-07
 num_epochs = 100
 
 
@@ -192,6 +192,9 @@ class ResNetModel(pl.LightningModule):
         self.log("val_auroc_epoch", self.val_auroc.compute())
         # Handle or reset saved outputs as needed
 
+        current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
+        self.log("learning_rate", current_lr, on_epoch=True)
+
 
 # Main training loop
 def train_model(downsample_factor):
@@ -215,6 +218,7 @@ def train_model(downsample_factor):
     trainer.fit(model, data_module)
 
 
-# Run training for each downsampling factor
-for factor in [1]:
-    train_model(factor)
+if __name__ == "__main__":
+    # Run training for each downsampling factor
+    for factor in [1]:
+        train_model(factor)

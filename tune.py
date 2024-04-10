@@ -202,6 +202,9 @@ class ResNetModel(pl.LightningModule):
         self.log("val_auroc_epoch", self.val_auroc.compute())
         # Handle or reset saved outputs as needed
 
+        current_lr = self.trainer.optimizers[0].param_groups[0]["lr"]
+        self.log("learning_rate", current_lr, on_epoch=True)
+
 
 ####################################################################################################
 # RAY Tune
