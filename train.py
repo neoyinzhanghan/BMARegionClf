@@ -13,8 +13,8 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 3.56e-06}  # 3.56e-07
-num_epochs = 100
+default_config = {"lr": 1.462801279401232e-06}  # 3.56e-07
+num_epochs = 200
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
