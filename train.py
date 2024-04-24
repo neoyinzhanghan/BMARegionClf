@@ -13,8 +13,8 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 1.462801279401232e-06}  # 3.56e-07
-num_epochs = 200
+default_config = {"lr": 3.56e-07 }#1.462801279401232e-06}  # 3.56e-07
+num_epochs = 1000
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
@@ -199,7 +199,7 @@ class ResNetModel(pl.LightningModule):
 # Main training loop
 def train_model(downsample_factor):
     data_module = ImageDataModule(
-        data_dir="/media/hdd2/neo/bma_region_clf_data_full_v2_split",
+        data_dir="/media/hdd3/neo/DATA/bma_region_clf_data_full_v2_split",
         batch_size=32,
         downsample_factor=downsample_factor,
     )
@@ -220,5 +220,5 @@ def train_model(downsample_factor):
 
 if __name__ == "__main__":
     # Run training for each downsampling factor
-    for factor in [1]:
+    for factor in [8]:
         train_model(factor)
