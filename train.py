@@ -80,6 +80,8 @@ class DownsampledDataset(torch.utils.data.Dataset):
                 image_size=512 // self.downsample_factor
             )(image=np.array(image))["image"]
 
+        image = to_tensor(image)
+
         return image, label
 
 
