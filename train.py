@@ -14,7 +14,7 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 3.56e-07} #1.462801279401232e-06} 
+default_config = {"lr": 1.462801279401232e-06}  #3.56e-07} 
 num_epochs = 200
 
 
@@ -228,5 +228,5 @@ def train_model(downsample_factor):
 
 if __name__ == "__main__":
     # Run training for each downsampling factor
-    for factor in [8]:
+    for factor in [1]:
         train_model(factor)
