@@ -5,6 +5,7 @@ import torch.optim.lr_scheduler as lr_scheduler
 import torch.nn.functional as F
 import albumentations as A
 import numpy as np
+from torchvision.transforms.functional import to_pil_image, to_tensor
 from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.utils.data import DataLoader
 from torch import nn
@@ -13,8 +14,8 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 3.56e-07 }#1.462801279401232e-06}  # 3.56e-07
-num_epochs = 1000
+default_config = {"lr": 3.56e-07} #1.462801279401232e-06} 
+num_epochs = 200
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
@@ -68,11 +69,16 @@ class DownsampledDataset(torch.utils.data.Dataset):
             size = (512 // self.downsample_factor, 512 // self.downsample_factor)
             image = transforms.functional.resize(image, size)
 
-            if self.apply_augmentation:
-                # Apply augmentation
-                image = get_feat_extract_augmentation_pipeline(
-                    image_size=512 // self.downsample_factor
-                )(image=np.array(image))["image"]
+        # Convert image to RGB if not already
+        image = to_pil_image(image)
+        if image.mode != "RGB":
+            image = image.convert("RGB")
+
+        if self.apply_augmentation:
+            # Apply augmentation
+            image = get_feat_extract_augmentation_pipeline(
+                image_size=512 // self.downsample_factor
+            )(image=np.array(image))["image"]
 
         return image, label
 
