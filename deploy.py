@@ -61,6 +61,6 @@ def predict_image(model, image_path):
 if __name__ == "__main__":
     ckpt_path = "/Users/neo/Documents/Research/MODELS/2024-04-06 BMARegionClf 1000Epochs/lightning_logs/1/version_0/checkpoints/epoch=999-step=55000.ckpt"
     model = load_model_checkpoint(ckpt_path)
-    image_path = "/Users/neo/Documents/Research/MODELS/results/results_bma_aml_v1_LITE/H21-8692;S10;MSKB - 2024-01-02 22.54.24/focus_regions/high_mag_unannotated/12718.jpg"
+    image_path = "/Users/neo/Documents/Research/DeepHeme/HemeYolo_data/HemeYoloV2/images/6022_BR.jpg"
     confidence_score = predict_image(model, image_path)
     print(f"Confidence score: {confidence_score}")
