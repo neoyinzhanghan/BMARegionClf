@@ -14,8 +14,8 @@ from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
 
 
-default_config = {"lr": 1.462801279401232e-06}  #3.56e-07} 
-num_epochs = 200
+default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
+num_epochs = 500 #200
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
@@ -228,5 +228,5 @@ def train_model(downsample_factor):
 
 if __name__ == "__main__":
     # Run training for each downsampling factor
-    for factor in [1]:
+    for factor in [8]:
         train_model(factor)
