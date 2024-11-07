@@ -103,18 +103,18 @@ class ImageDataModule(pl.LightningDataModule):
     def setup(self, stage=None):
         # Load train, validation and test datasets
         train_dataset = RegionClassificationDataset(
-            metadata_csv_path="split_region_clf_v3_metadata.csv",
+            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
             split="train",
             transform=self.transform,
         )
         val_dataset = datasets.ImageFolder(
-            metadata_csv_path="split_region_clf_v3_metadata.csv",
-            split="train",
+            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
+            split="val",
             transform=self.transform,
         )
         test_dataset = datasets.ImageFolder(
-            metadata_csv_path="split_region_clf_v3_metadata.csv",
-            split="train",
+            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
+            split="test",
             transform=self.transform,
         )
 
