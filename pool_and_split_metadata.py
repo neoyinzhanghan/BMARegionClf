@@ -8,6 +8,7 @@ adequate_folders = [
     "/media/hdd3/neo/regions_labelled_by_neo/good",
     "/media/hdd3/neo/regions_labelled_by_neo/high_mag_rejected_good",
     "/media/hdd3/neo/regions_labelled_by_neo/high_mag_selected",
+    "/media/hdd3/neo/Greg_Regions/good",
 ]
 inadequate_folders = [
     "/media/hdd3/neo/bma_region_clf_data_v3/bad",
@@ -15,6 +16,7 @@ inadequate_folders = [
     "/media/hdd3/neo/regions_labelled_by_neo/bad",
     "/media/hdd3/neo/regions_labelled_by_neo/high_mag_rejected",
     "/media/hdd3/neo/regions_labelled_by_neo/ndpi",
+    "/media/hdd3/neo/Greg_Regions/bad",
 ]
 
 adequate_images = []

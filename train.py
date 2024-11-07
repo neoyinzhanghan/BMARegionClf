@@ -88,9 +88,9 @@ class DownsampledDataset(torch.utils.data.Dataset):
 
 # Data Module
 class ImageDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir, batch_size, downsample_factor):
+    def __init__(self, metadata_path, batch_size, downsample_factor):
         super().__init__()
-        self.data_dir = data_dir
+        self.data_dir = metadata_path
         self.batch_size = batch_size
         self.downsample_factor = downsample_factor
         self.transform = transforms.Compose(
@@ -103,17 +103,17 @@ class ImageDataModule(pl.LightningDataModule):
     def setup(self, stage=None):
         # Load train, validation and test datasets
         train_dataset = RegionClassificationDataset(
-            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
+            metadata_csv_path=self.metadata_path,
             split="train",
             transform=self.transform,
         )
         val_dataset = RegionClassificationDataset(
-            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
+            metadata_csv_path=self.metadata_path,
             split="val",
             transform=self.transform,
         )
         test_dataset = RegionClassificationDataset(
-            metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
+            metadata_csv_path=self.metadata_path,
             split="test",
             transform=self.transform,
         )
@@ -211,7 +211,7 @@ class ResNetModel(pl.LightningModule):
 # Main training loop
 def train_model(downsample_factor):
     data_module = ImageDataModule(
-        data_dir="/media/hdd3/neo/DATA/bma_region_clf_data_full_v2_split",
+        metadata_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
         batch_size=32,
         downsample_factor=downsample_factor,
     )
