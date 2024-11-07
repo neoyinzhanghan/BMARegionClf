@@ -7,7 +7,7 @@ from PIL import Image
 
 
 class RegionClassificationDataset(Dataset):
-    def __init__(self, metadata_csv_path, split):
+    def __init__(self, metadata_csv_path, split, transform=None):
         """
         Args:
             metadata_csv_path (str): Path to the CSV file containing metadata.
