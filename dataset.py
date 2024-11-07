@@ -1,12 +1,13 @@
+import os
 import torch
+import numpy as np
+import pandas as pd
 from torch.utils.data import Dataset
 from PIL import Image
-import pandas as pd
-import os
 
 
 class RegionClassificationDataset(Dataset):
-    def __init__(self, metadata_csv_path, split, transform=None):
+    def __init__(self, metadata_csv_path, split):
         """
         Args:
             metadata_csv_path (str): Path to the CSV file containing metadata.
@@ -32,8 +33,9 @@ class RegionClassificationDataset(Dataset):
 
         # Open the image
         image = Image.open(img_path).convert("RGB")
+        image = np.array(image)
 
-        # convert the image to a torch.Tensor
+        # convert the pil image to a tensor
         image = torch.tensor(image)
 
         # Map label to an integer class (adequate -> 0, inadequate -> 1)
