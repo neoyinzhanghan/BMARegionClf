@@ -16,7 +16,7 @@ from dataset import RegionClassificationDataset
 
 
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
-num_epochs = 500  # 200
+num_epochs = 65  # 200
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
