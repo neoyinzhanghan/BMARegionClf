@@ -2,8 +2,20 @@ import os
 import random
 import pandas as pd
 
-adequate_folders = []
-inadequate_folders = []
+adequate_folders = [
+    "/media/hdd3/neo/bma_region_clf_data_v3/good",
+    "/media/hdd3/neo/bma_region_clf_data_v3/adequate",
+    "/media/hdd3/neo/regions_labelled_by_neo/good",
+    "/media/hdd3/neo/regions_labelled_by_neo/high_mag_rejected_good",
+    "/media/hdd3/neo/regions_labelled_by_neo/high_mag_selected",
+]
+inadequate_folders = [
+    "/media/hdd3/neo/bma_region_clf_data_v3/bad",
+    "/media/hdd3/neo/bma_region_clf_data_v3/not_adequate",
+    "/media/hdd3/neo/regions_labelled_by_neo/bad",
+    "/media/hdd3/neo/regions_labelled_by_neo/high_mag_rejected",
+    "/media/hdd3/neo/regions_labelled_by_neo/ndpi",
+]
 
 adequate_images = []
 inadequate_images = []
