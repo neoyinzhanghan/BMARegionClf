@@ -3,6 +3,9 @@ import torch
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
+
+# import transform to tensor
+from torchvision.transforms import ToTensor
 from PIL import Image
 
 
@@ -33,10 +36,9 @@ class RegionClassificationDataset(Dataset):
 
         # Open the image
         image = Image.open(img_path).convert("RGB")
-        image = np.array(image)
 
         # convert the pil image to a tensor
-        image = torch.tensor(image)
+        image = ToTensor()(image)
 
         # Map label to an integer class (adequate -> 0, inadequate -> 1)
         label = 0 if label == "adequate" else 1
