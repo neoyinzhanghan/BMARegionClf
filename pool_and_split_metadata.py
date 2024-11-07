@@ -63,3 +63,4 @@ for i in range(len(pooled_and_split_metadata_df)):
 pooled_and_split_metadata_df["split"] = split
 
 # save the dataframe to a csv file named split_region_clf_v3_metadata.csv in the working directory
+pooled_and_split_metadata_df.to_csv("split_region_clf_v3_metadata.csv", index=False)

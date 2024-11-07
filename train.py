@@ -12,10 +12,11 @@ from torch import nn
 from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision import transforms, datasets, models
 from torchmetrics import Accuracy, AUROC
+from dataset import RegionClassificationDataset
 
 
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
-num_epochs = 500 #200
+num_epochs = 500  # 200
 
 
 def get_feat_extract_augmentation_pipeline(image_size):
@@ -101,16 +102,19 @@ class ImageDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         # Load train, validation and test datasets
-        train_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "train"),
+        train_dataset = RegionClassificationDataset(
+            metadata_csv_path="split_region_clf_v3_metadata.csv",
+            split="train",
             transform=self.transform,
         )
         val_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "val"),
+            metadata_csv_path="split_region_clf_v3_metadata.csv",
+            split="train",
             transform=self.transform,
         )
         test_dataset = datasets.ImageFolder(
-            root=os.path.join(self.data_dir, "test"),
+            metadata_csv_path="split_region_clf_v3_metadata.csv",
+            split="train",
             transform=self.transform,
         )
 
@@ -228,5 +232,5 @@ def train_model(downsample_factor):
 
 if __name__ == "__main__":
     # Run training for each downsampling factor
-    for factor in [8]:
+    for factor in [1, 8]:
         train_model(factor)
