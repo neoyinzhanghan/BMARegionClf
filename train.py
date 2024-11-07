@@ -10,7 +10,7 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.utils.data import DataLoader
 from torch import nn
 from pytorch_lightning.loggers import TensorBoardLogger
-from torchvision import transforms, datasets, models
+from torchvision import transforms, models
 from torchmetrics import Accuracy, AUROC
 from dataset import RegionClassificationDataset
 
@@ -107,12 +107,12 @@ class ImageDataModule(pl.LightningDataModule):
             split="train",
             transform=self.transform,
         )
-        val_dataset = datasets.ImageFolder(
+        val_dataset = RegionClassificationDataset(
             metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
             split="val",
             transform=self.transform,
         )
-        test_dataset = datasets.ImageFolder(
+        test_dataset = RegionClassificationDataset(
             metadata_csv_path="/home/greg/Documents/neo/BMARegionClf/split_region_clf_v3_metadata.csv",
             split="test",
             transform=self.transform,
