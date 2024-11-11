@@ -13,7 +13,6 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from torchvision import transforms, models
 from torchmetrics import Accuracy, AUROC
 from dataset import RegionClassificationDataset
-from torch.utils.data import WeightedRandomSampler
 
 
 default_config = {"lr": 3.56e-07}  # 1.462801279401232e-06}
@@ -130,24 +129,11 @@ class ImageDataModule(pl.LightningDataModule):
             test_dataset, self.downsample_factor, apply_augmentation=False
         )
 
-        print(f"Compiling class weights")
-        # Compute sample weights and create WeightedRandomSampler only once
-        targets = [label for _, label in self.train_dataset]
-        class_counts = np.bincount(targets)
-        class_weights = 1.0 / class_counts
-        sample_weights = [class_weights[label] for label in targets]
-        print(f"Finished compiling class weights")
-
-        self.train_sampler = WeightedRandomSampler(
-            weights=sample_weights, num_samples=len(sample_weights), replacement=True
-        )
-
     def train_dataloader(self):
         # Reuse the precomputed sampler
         return DataLoader(
             self.train_dataset,
             batch_size=self.batch_size,
-            sampler=self.train_sampler,
             num_workers=20,
         )
 
