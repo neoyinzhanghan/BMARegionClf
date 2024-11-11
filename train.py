@@ -100,6 +100,7 @@ class ImageDataModule(pl.LightningDataModule):
                 # transforms.Normalize(mean=(0.61070228, 0.54225375, 0.65411311), std=(0.1485182, 0.1786308, 0.12817113))
             ]
         )
+        self.train_sampler = None  # Initialize sampler as None
 
     def setup(self, stage=None):
         # Load train, validation and test datasets
@@ -129,21 +130,22 @@ class ImageDataModule(pl.LightningDataModule):
             test_dataset, self.downsample_factor, apply_augmentation=False
         )
 
-    def train_dataloader(self):
-        # Calculate weights for each class in the training dataset
+        # Compute sample weights and create WeightedRandomSampler only once
         targets = [label for _, label in self.train_dataset]
         class_counts = np.bincount(targets)
         class_weights = 1.0 / class_counts
         sample_weights = [class_weights[label] for label in targets]
 
-        sampler = WeightedRandomSampler(
+        self.train_sampler = WeightedRandomSampler(
             weights=sample_weights, num_samples=len(sample_weights), replacement=True
         )
 
+    def train_dataloader(self):
+        # Reuse the precomputed sampler
         return DataLoader(
             self.train_dataset,
             batch_size=self.batch_size,
-            sampler=sampler,
+            sampler=self.train_sampler,
             num_workers=20,
         )
 
