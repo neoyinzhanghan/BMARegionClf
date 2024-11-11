@@ -134,7 +134,10 @@ class ImageDataModule(pl.LightningDataModule):
         targets = [label for _, label in self.train_dataset]
         class_counts = np.bincount(targets)
         class_weights = 1.0 / class_counts
+
+        print(f"Compiling class weights")
         sample_weights = [class_weights[label] for label in targets]
+        print(f"Finished compiling class weights")
 
         self.train_sampler = WeightedRandomSampler(
             weights=sample_weights, num_samples=len(sample_weights), replacement=True
